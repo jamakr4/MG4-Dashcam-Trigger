@@ -1,6 +1,6 @@
 # MG4 Dashcam Trigger
 
-`MG4 Dashcam Trigger` is a small launcher app for the MG4 that does not open its own camera interface when tapped. Instead, it sends a direct external trigger to the `MG4-360-Camera-App`.
+`MG4 Dashcam Trigger` is a small launcher app for the MG4 that does not open its own camera interface when tapped. Instead, it sends a direct external trigger to the [MG4-360-Camera-App](https://github.com/jamakr4/MG4-360-Camera-App).
 
 The purpose of this app is to let you save a dashcam event with a single tap from the sidebar, without having to manually open the `MG4-360-Camera-App` first just to press the event button there.
 
