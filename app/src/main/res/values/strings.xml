@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dashcam</string>
+    <string name="notification_channel_trigger_error_banner">Dashcam Trigger Error Banner</string>
+    <string name="notification_trigger_error_generic">Dashcam trigger needs attention</string>
+    <string name="notification_trigger_error_target_missing">MG4-360-Camera-App is not installed</string>
+    <string name="notification_trigger_error_receiver_missing">No compatible external trigger receiver was found</string>
+    <string name="trigger_error_title">Trigger failed</string>
+    <string name="trigger_error_generic">The dashcam event trigger could not be completed.</string>
+    <string name="trigger_error_target_missing">MG4-360-Camera-App is not installed on this system.</string>
+    <string name="trigger_error_receiver_missing">No compatible trigger receiver was found in MG4-360-Camera-App.</string>
+</resources>
