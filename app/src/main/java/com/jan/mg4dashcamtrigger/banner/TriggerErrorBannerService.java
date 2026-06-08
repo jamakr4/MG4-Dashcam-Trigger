@@ -8,9 +8,12 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.PixelFormat;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
-import android.media.ToneGenerator;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -131,10 +134,46 @@ public final class TriggerErrorBannerService extends Service {
 
     private void playWarningTone() {
         try {
-            ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-            toneGenerator.startTone(ToneGenerator.TONE_PROP_NACK, 250);
-            mainHandler.postDelayed(toneGenerator::release, 400L);
+            // AAOS routes audio strictly by usage/zone via CarAudioService and silently drops
+            // streams without explicit AudioAttributes + a granted AudioFocusRequest.
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            AudioFocusRequest focusRequest = new AudioFocusRequest.Builder(
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                    .setAudioAttributes(attributes)
+                    .setOnAudioFocusChangeListener(focusChange -> { })
+                    .build();
+            if (audioManager != null) {
+                audioManager.requestAudioFocus(focusRequest);
+            }
+
+            MediaPlayer player = new MediaPlayer();
+            player.setAudioAttributes(attributes);
+            try (AssetFileDescriptor afd = getResources()
+                    .openRawResourceFd(R.raw.notification_sound_7062_henrycena82595)) {
+                player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            }
+            player.setVolume(1f, 1f);
+            player.setOnCompletionListener(mp -> releasePlayer(mp, audioManager, focusRequest));
+            player.setOnErrorListener((mp, what, extra) -> {
+                releasePlayer(mp, audioManager, focusRequest);
+                return true;
+            });
+            player.prepare();
+            player.start();
         } catch (Throwable ignored) {
+        }
+    }
+
+    private void releasePlayer(MediaPlayer player, AudioManager audioManager, AudioFocusRequest focusRequest) {
+        player.reset();
+        player.release();
+        if (audioManager != null) {
+            audioManager.abandonAudioFocusRequest(focusRequest);
         }
     }
 

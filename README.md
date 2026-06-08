@@ -43,6 +43,8 @@ All of those features belong to the `MG4-360-Camera-App`.
 
 As a result, `MG4 Dashcam Trigger` is only useful when used together with a compatible and properly installed version of the [MG4-360-Camera-App](https://github.com/jamakr4/MG4-360-Camera-App).
 
+The trigger app also includes a warning/error sound used by the error banner when the external trigger cannot be completed.
+
 ## Requirements
 
 For the trigger to work:
@@ -61,6 +63,17 @@ Typical flow:
 2. The user taps `MG4 Dashcam Trigger` in the sidebar
 3. The `MG4-360-Camera-App` saves the current dashcam event
 4. The full camera app does not need to be brought to the foreground
+
+## Credits
+
+Sound credit for the trigger app error banner:
+
+- `notification-sound-7062` by `HenryCena82595` — [Freesound](https://freesound.org/s/731783/) — License: `Attribution NonCommercial 4.0`
+
+The notification sound file is licensed under CC-BY-NC-4.0 and therefore not tracked in this repository. To build, download it manually:
+- Get the source from [Freesound — notification-sound-7062 by HenryCena82595](https://freesound.org/s/731783/)
+- Place it at `app/src/main/res/raw/notification_sound_7062_henrycena82595.ogg`
+- Convert to `.ogg` (Vorbis) if Freesound serves another format — the app loads the resource via `R.raw.notification_sound_7062_henrycena82595` and expects an `.ogg` extension
 
 ## Disclaimer
 
